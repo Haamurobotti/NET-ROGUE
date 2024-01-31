@@ -22,6 +22,8 @@ namespace Rogue
     {
        public Race rotu;
        public string name;
-       public Class luokka; 
+       public Class luokka;
+
+        public Point2D sijainti;
     }
 }

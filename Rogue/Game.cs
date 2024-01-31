@@ -4,13 +4,23 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Rogue
 {
     internal class Game
     {
    
-        char num = 'm';
+        public struct Point2D 
+        {
+            public int x;
+            public int y;
+            public Point2D(int px, int py)
+            {   
+                this.x = px;
+                this.y = py;
+            }
+        }
         public string AskName() 
         {
             while (true)
@@ -45,37 +55,38 @@ namespace Rogue
             while (true)
             {
                 Console.WriteLine("Select race: ");
+                Console.WriteLine("Input a number 1-3");
                 Console.WriteLine("1: Human");
                 Console.WriteLine("2: Elf");
                 Console.WriteLine("3: Orc");
                 string raceAnswer = Console.ReadLine();
-                int rotunumero = System.Convert.ToInt32(raceAnswer);
-                Console.WriteLine("Input a number 1-10");
-                string input = Console.ReadLine();
+
+                
+
                 int number = 0;
-                if (Int32.TryParse(input, out number))
+                if (Int32.TryParse(raceAnswer, out number))
                 {
                     Console.WriteLine("Got number: " + number);
-                    if (number < 1 || number > 10)
+                    if (number < 1 || number > 3)
                     {
                         Console.WriteLine("The number is not in requested range.");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Cannot convert text \"" + input + "\" to integer.");
+                    Console.WriteLine("Cannot convert text \"" + raceAnswer + "\" to integer.");
                 }
-                if (rotunumero == 1)
+                if (number == 1)
                 {
                     return Race.Human;
 
                 }
-                if (rotunumero == 2)
+                if (number == 2)
                 {
                     return Race.Elf;
 
                 }
-                if (rotunumero == 3)
+                if (number == 3)
                 {
                     return Race.Orc;
 
@@ -86,22 +97,38 @@ namespace Rogue
         {
             while (true) {
                 Console.WriteLine("Select class:");
+                Console.WriteLine("Input a number 1-3");
                 Console.WriteLine("1: Warrior");
                 Console.WriteLine("2: Mage");
                 Console.WriteLine("3: Rogue");
                 string classAnswer = Console.ReadLine();
-                int classnumber = System.Convert.ToInt32(classAnswer);
-                if (classnumber == 1)
+
+                int number2 = 0;
+                if (Int32.TryParse(classAnswer, out number2))
+                {
+                    Console.WriteLine("Got number: " + number2);
+                    if (number2 < 1 || number2 > 3)
+                    {
+                        Console.WriteLine("The number is not in requested range.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Cannot convert text \"" + classAnswer + "\" to integer.");
+                }
+
+
+                if (number2 == 1)
                 {
                    return Class.Warrior;
                     
                 }
-                if (classnumber == 2)
+                if (number2 == 2)
                 {
                     return Class.Mage;
                     
                 }
-                if (classnumber == 3)
+                if (number2 == 3)
                 {
                     return Class.Rogue;
                 }
@@ -110,15 +137,16 @@ namespace Rogue
         public void Run() 
         {
             new PlayerCharacter();
-            while (true)
+            
             {
                 PlayerCharacter player = new PlayerCharacter();
                 
                 player.name = AskName();
-                AskRace();
-                AskClass();
-                
-
+                player.rotu = AskRace();
+                player.luokka = AskClass();
+                Console.WriteLine(player.name);
+                Console.WriteLine(player.rotu)
+                ;Console.WriteLine(player.luokka);
                 
                 
                 
