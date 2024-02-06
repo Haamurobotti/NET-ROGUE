@@ -1,27 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Numerics;
 
 namespace Rogue
 {
     internal class Game
     {
-   
-        public struct Point2D 
-        {
-            public int x;
-            public int y;
-            public Point2D(int px, int py)
-            {   
-                this.x = px;
-                this.y = py;
-            }
-        }
-        public string AskName() 
+
+
+        public string AskName()
         {
             while (true)
             {
@@ -46,7 +31,7 @@ namespace Rogue
                         break;
                     }
                 }
-                if (nameOk) {  return nimi; }
+                if (nameOk) { return nimi; }
             }
 
         }
@@ -61,7 +46,7 @@ namespace Rogue
                 Console.WriteLine("3: Orc");
                 string raceAnswer = Console.ReadLine();
 
-                
+
 
                 int number = 0;
                 if (Int32.TryParse(raceAnswer, out number))
@@ -95,7 +80,8 @@ namespace Rogue
         }
         public Class AskClass()
         {
-            while (true) {
+            while (true)
+            {
                 Console.WriteLine("Select class:");
                 Console.WriteLine("Input a number 1-3");
                 Console.WriteLine("1: Warrior");
@@ -120,13 +106,13 @@ namespace Rogue
 
                 if (number2 == 1)
                 {
-                   return Class.Warrior;
-                    
+                    return Class.Warrior;
+
                 }
                 if (number2 == 2)
                 {
                     return Class.Mage;
-                    
+
                 }
                 if (number2 == 3)
                 {
@@ -134,23 +120,57 @@ namespace Rogue
                 }
             }
         }
-        public void Run() 
+        public void Run()
         {
             new PlayerCharacter();
-            
+
             {
                 PlayerCharacter player = new PlayerCharacter();
-                
+
                 player.name = AskName();
                 player.rotu = AskRace();
                 player.luokka = AskClass();
+
+
                 Console.WriteLine(player.name);
-                Console.WriteLine(player.rotu)
-                ;Console.WriteLine(player.luokka);
-                
-                
-                
+                Console.WriteLine(player.rotu);
+                Console.WriteLine(player.luokka);
+                player.sijainti = new Vector2(1, 1);
+
+                Console.Clear();
+                player.Draw();
+                while (true)
+                {
+                    int moveX = 0;
+                    int moveY = 0;
+
+                    ConsoleKeyInfo key = Console.ReadKey();
+                    if (key.Key == ConsoleKey.UpArrow)
+                    {
+                        moveY = -1;
+                    }
+                    else if (key.Key == ConsoleKey.DownArrow)
+                    {
+                        moveY = 1;
+                    }
+                    else if (key.Key == ConsoleKey.LeftArrow)
+                    {
+                        moveX = -1;
+                    }
+                    else if (key.Key == ConsoleKey.RightArrow)
+                    {
+                        moveX = 1;
+                    }
+
+                   player.Move(moveX, moveY);
+
+                    Console.Clear();
+
+                    player.Draw();
+                }
+
             }
         }
+
     }
 }
