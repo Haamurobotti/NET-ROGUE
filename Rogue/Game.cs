@@ -1,10 +1,11 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace Rogue
 {
     internal class Game
     {
-
+        Map level101;
 
         public string AskName()
         {
@@ -120,56 +121,75 @@ namespace Rogue
                 }
             }
         }
+
+
         public void Run()
         {
-            new PlayerCharacter();
 
+
+            MapLoader reader = new MapLoader();
+            level101 =  reader.ReadMapFromFileTest("Maps/mapfile.json");
+
+            PlayerCharacter player = new PlayerCharacter();
+
+            player.name = AskName();
+            player.rotu = AskRace();
+            player.luokka = AskClass();
+
+
+            Console.WriteLine(player.name);
+            Console.WriteLine(player.rotu);
+            Console.WriteLine(player.luokka);
+            player.sijainti = new Vector2(1, 1);
+            MapLoader loader = new MapLoader();
+            //level101 = loader.LoadTestmap();
+            Console.Clear();
+            level101.DrawMap();
+            player.Draw();
+            while (true)
             {
-                PlayerCharacter player = new PlayerCharacter();
+                int moveX = 0;
+                int moveY = 0;
 
-                player.name = AskName();
-                player.rotu = AskRace();
-                player.luokka = AskClass();
+                ConsoleKeyInfo key = Console.ReadKey();
+                if (key.Key == ConsoleKey.UpArrow)
+                {
+                    moveY = -1;
+                }
+                else if (key.Key == ConsoleKey.DownArrow)
+                {
+                    moveY = 1;
+                }
+                else if (key.Key == ConsoleKey.LeftArrow)
+                {
+                    moveX = -1;
+                }
+                else if (key.Key == ConsoleKey.RightArrow)
+                {
+                    moveX = 1;
+                }
+                int newX = (int)player.sijainti.X + moveX;
+                int newY = (int)player.sijainti.Y + moveY;
+                int tileId = level101.getTileId(newX, newY);
+                if (tileId == 2)
+                {
+                    continue;
+                }
+                if (tileId == 1)
+                {
+                    player.Move(moveX, moveY);
+                }
+                
 
-
-                Console.WriteLine(player.name);
-                Console.WriteLine(player.rotu);
-                Console.WriteLine(player.luokka);
-                player.sijainti = new Vector2(1, 1);
+                
+                
 
                 Console.Clear();
+                level101.DrawMap();
                 player.Draw();
-                while (true)
-                {
-                    int moveX = 0;
-                    int moveY = 0;
-
-                    ConsoleKeyInfo key = Console.ReadKey();
-                    if (key.Key == ConsoleKey.UpArrow)
-                    {
-                        moveY = -1;
-                    }
-                    else if (key.Key == ConsoleKey.DownArrow)
-                    {
-                        moveY = 1;
-                    }
-                    else if (key.Key == ConsoleKey.LeftArrow)
-                    {
-                        moveX = -1;
-                    }
-                    else if (key.Key == ConsoleKey.RightArrow)
-                    {
-                        moveX = 1;
-                    }
-
-                   player.Move(moveX, moveY);
-
-                    Console.Clear();
-
-                    player.Draw();
-                }
-
             }
+
+
         }
 
     }
