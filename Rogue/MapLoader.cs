@@ -1,4 +1,6 @@
-﻿namespace Rogue
+﻿
+
+namespace Rogue
 {
     internal class MapLoader
     {
@@ -38,5 +40,26 @@
             return LoadTestmap(); // Return the test map.
         }
 
+         public Map LoadFromFile(string fileName)
+        {
+            bool fileFound = File.Exists(fileName);
+            if (fileFound == false)
+            {
+                Console.WriteLine($"File {fileName} not found");
+                return LoadTestmap(); // Return the test map as fallback
+            }
+
+            string fileContents;
+
+            using (StreamReader reader = File.OpenText(fileName))
+            {
+                // TODO: Read all lines into fileContens
+            }
+
+            Map loadedMap = /*Use the correct JSON function here*/(fileContents);
+
+            return loadedMap;
+        }
     }
+    
 }
