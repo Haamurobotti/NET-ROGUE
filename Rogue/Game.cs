@@ -125,11 +125,10 @@ namespace Rogue
 
         public void Run()
         {
-
+            
 
             MapLoader reader = new MapLoader();
-            level101 =  reader.ReadMapFromFileTest("Maps/mapfile.json");
-
+            level101 =  reader.LoadFromFile("Maps/mapfile.json");
             PlayerCharacter player = new PlayerCharacter();
 
             player.name = AskName();
@@ -141,7 +140,7 @@ namespace Rogue
             Console.WriteLine(player.rotu);
             Console.WriteLine(player.luokka);
             player.sijainti = new Vector2(1, 1);
-            MapLoader loader = new MapLoader();
+            
             //level101 = loader.LoadTestmap();
             Console.Clear();
             level101.DrawMap();

@@ -1,5 +1,9 @@
 ﻿
 
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Xml.Linq;
+
 namespace Rogue
 {
     internal class MapLoader
@@ -19,29 +23,10 @@ namespace Rogue
             };
             return test;
         }
-        public Map ReadMapFromFileTest(string fileName)
-        {
-            using (StreamReader reader = File.OpenText(fileName))
-            {
-               
-
-                string line;
-                while (true)
-                {
-                    line = reader.ReadLine();
-                    if (line == null)
-                    {
-                        break; // End of file
-                    }
-                    Console.WriteLine(line);
-                }
-
-            }
-            return LoadTestmap(); // Return the test map.
-        }
+        
 
          public Map LoadFromFile(string fileName)
-        {
+         {
             bool fileFound = File.Exists(fileName);
             if (fileFound == false)
             {
@@ -49,16 +34,14 @@ namespace Rogue
                 return LoadTestmap(); // Return the test map as fallback
             }
 
-            string fileContents;
 
             using (StreamReader reader = File.OpenText(fileName))
             {
-                // TODO: Read all lines into fileContens
+                Map map = JsonConvert.DeserializeObject<Map>(reader.ReadToEnd());
+                return map;
             }
 
-            Map loadedMap = /*Use the correct JSON function here*/(fileContents);
 
-            return loadedMap;
         }
     }
     
