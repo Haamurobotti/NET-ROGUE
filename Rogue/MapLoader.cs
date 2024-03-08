@@ -12,7 +12,9 @@ namespace Rogue
         {
             Map test = new Map();
             test.mapWidth = 8;
-            test.mapTiles = new int[] {
+            test.layers = new MapLayer[3]; 
+           test.layers[0].mapTiles = new int[] 
+           {
             2, 2, 2, 2, 2, 2, 2, 2,
             2, 1, 1, 2, 1, 1, 1, 2,
             2, 1, 1, 2, 1, 1, 1, 2,

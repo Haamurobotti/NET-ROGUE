@@ -9,24 +9,26 @@ namespace Rogue
     internal class Map
     {
         public int mapWidth;
-        public int[] mapTiles;
+        public MapLayer[] layers;
         public int getTileId(int X, int Y)
         {
+            MapLayer ground = layers[0];
+
             int index = X + Y * mapWidth;
-            int tiledId = mapTiles[index];
+            int tiledId = ground.mapTiles[index];
             return tiledId;
         }
         public void DrawMap()
         {
-
+            MapLayer ground = layers[0];
             Console.ForegroundColor = ConsoleColor.Gray;
-            int mapHeight = mapTiles.Length / mapWidth;
+            int mapHeight = ground.mapTiles.Length / mapWidth;
             for (int y = 0; y < mapHeight; y++)
             {
                 for (int x = 0; x < mapWidth; x++)
                 {
                     int index = x + y * mapWidth;
-                    int tiledId = mapTiles[index];
+                    int tiledId = ground.mapTiles[index];
 
                     Console.SetCursorPosition(x, y);
                     switch (tiledId)
