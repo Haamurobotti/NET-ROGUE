@@ -40,6 +40,7 @@ namespace Rogue
             using (StreamReader reader = File.OpenText(fileName))
             {
                 Map map = JsonConvert.DeserializeObject<Map>(reader.ReadToEnd());
+               // Map.LoadEnemiesAndIems(string fileName);
                 return map;
             }
 
