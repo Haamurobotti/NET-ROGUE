@@ -1,12 +1,20 @@
-﻿using System.Diagnostics;
-using System.Numerics;
-
+﻿using System.Numerics;
+using ZeroElectric.Vinculum;
 namespace Rogue
 {
     internal class Game
     {
         Map level101;
+        PlayerCharacter player;
+        public static readonly int tileSize = 16;
 
+        int screen_Width = 1280;
+        int screen_Height = 720;
+
+        int game_width;
+        int game_Height;
+
+        RenderTexture game_screen;
         public string AskName()
         {
             while (true)
@@ -122,74 +130,149 @@ namespace Rogue
             }
         }
 
-
-        public void Run()
+        private PlayerCharacter CreateCharacter()
         {
-            
-
-            MapLoader reader = new MapLoader();
-            level101 =  reader.LoadFromFile("Maps/mapfile.json");
             PlayerCharacter player = new PlayerCharacter();
 
             player.name = AskName();
             player.rotu = AskRace();
             player.luokka = AskClass();
+            return player;
+        }
 
+        public void Run()
+        {
+           
+            Init();
+            GameLoop();
+            Raylib.CloseWindow();
+            Raylib.UnloadRenderTexture(game_screen);
 
-            Console.WriteLine(player.name);
-            Console.WriteLine(player.rotu);
-            Console.WriteLine(player.luokka);
+        }
+        private void Init()
+        {
+
+            player = CreateCharacter();
             player.sijainti = new Vector2(1, 1);
+            MapLoader loader = new MapLoader();
+            level101 = loader.LoadFromFile("Maps/mapfile.json");
+            Raylib.InitWindow(screen_Width, screen_Height, "Rogue");
+            Raylib.SetWindowState(ConfigFlags.FLAG_WINDOW_RESIZABLE);
+            Raylib.SetTargetFPS(30);
+
+            game_width = 480;
+            game_Height = 270;
+
+            game_screen = Raylib.LoadRenderTexture(game_width, game_Height);
+            Raylib.SetTextureFilter(game_screen.texture, TextureFilter.TEXTURE_FILTER_BILINEAR);
+            Raylib.SetWindowMinSize(game_width, game_Height);
+
+            //Texture playerTexture = Raylib.LoadTexture("Paladin.png");
+
             
-            //level101 = loader.LoadTestmap();
+        }
+
+        
+
+        private void DrawGameToTexture()
+        {
+
+            Raylib.BeginTextureMode(game_screen);
+
+            Draw();
+
+            Raylib.EndTextureMode();
+            DrawGameScaled();
+        }
+
+        private void DrawGameScaled()
+        {
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Raylib.DARKGRAY);
+
+            int draw_width = Raylib.GetScreenWidth();
+            int draw_height = Raylib.GetScreenHeight();
+            float scale = Math.Min((float)draw_width / game_width, (float)draw_height / game_Height);
+
+            Rectangle source = new Rectangle(0.0f, 0.0f,
+                game_screen.texture.width,
+                game_screen.texture.height * -1.0f);
+
+            Rectangle destination = new Rectangle(
+                (draw_width - (float)game_width * scale) * 0.5f,
+                (draw_height) - (float)game_Height * scale * 0.5f,
+                game_width * scale,
+                game_Height * scale);
+
+            Raylib.DrawTexturePro(game_screen.texture, source, destination, new Vector2(0,0), 0.0f, Raylib.WHITE);
+            Raylib.EndDrawing();
+        }
+
+        private void Draw()
+        {
+            
             Console.Clear();
+                Raylib.ClearBackground(Raylib.BLACK);
             level101.DrawMap();
             player.Draw();
-            while (true)
+            
+        }
+
+        private void UpdateGame()
+        {
+
+
+            //level101 = loader.LoadTestmap();
+
+
+            int moveX = 0;
+            int moveY = 0;
+
+            ConsoleKeyInfo key = Console.ReadKey();
+            if (key.Key == ConsoleKey.UpArrow)
             {
-                int moveX = 0;
-                int moveY = 0;
+                moveY = -1;
+            }
+            else if (key.Key == ConsoleKey.DownArrow)
+            {
+                moveY = 1;
+            }
+            else if (key.Key == ConsoleKey.LeftArrow)
+            {
+                moveX = -1;
+            }
+            else if (key.Key == ConsoleKey.RightArrow)
+            {
+                moveX = 1;
+            }
+            int newX = (int)player.sijainti.X + moveX;
+            int newY = (int)player.sijainti.Y + moveY;
+            int tileId = level101.getTileId(newX, newY);
 
-                ConsoleKeyInfo key = Console.ReadKey();
-                if (key.Key == ConsoleKey.UpArrow)
-                {
-                    moveY = -1;
-                }
-                else if (key.Key == ConsoleKey.DownArrow)
-                {
-                    moveY = 1;
-                }
-                else if (key.Key == ConsoleKey.LeftArrow)
-                {
-                    moveX = -1;
-                }
-                else if (key.Key == ConsoleKey.RightArrow)
-                {
-                    moveX = 1;
-                }
-                int newX = (int)player.sijainti.X + moveX;
-                int newY = (int)player.sijainti.Y + moveY;
-                int tileId = level101.getTileId(newX, newY);
-                if (tileId == 2)
-                {
-                    continue;
-                }
-                if (tileId == 1)
-                {
-                    player.Move(moveX, moveY);
-                }
-                
+            /*if (tileId == 2)
+            {
+                continue;
+            }*/
 
-                
-                
-
-                Console.Clear();
-                level101.DrawMap();
-                player.Draw();
+            if (tileId == 1)
+            {
+                player.Move(moveX, moveY);
             }
 
 
-        }
 
+
+
+
+
+        }
+        private void GameLoop()
+        {
+            while (Raylib.WindowShouldClose() == false)
+            {
+                UpdateGame();
+                DrawGameToTexture();
+            }
+        }
     }
 }

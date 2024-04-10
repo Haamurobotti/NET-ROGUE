@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
-using System.Threading;
+﻿using System.Numerics;
+using ZeroElectric.Vinculum;
 
 namespace Rogue
 {
@@ -22,17 +17,26 @@ namespace Rogue
     }
     internal class PlayerCharacter
     {
-       public Race rotu;
-       public string name;
-       public Class luokka;
+        public Race rotu;
+        public string name;
+        public Class luokka;
 
-       public Vector2 sijainti;
-       public void Draw()
+        public Vector2 sijainti;
+
+        Texture image;
+        int imagePixelX;
+        int imagePixelY;
+        public void Draw()
         {
             Console.SetCursorPosition((int)sijainti.X, (int)sijainti.Y);
-            Console.Write("@");
+            Color color;
+            int pixelX = (int)(sijainti.X * Game.tileSize);
+            int pixelY = (int)(sijainti.Y * Game.tileSize);
+            //Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.RED);
+            //Raylib.DrawText("@", pixelX, pixelY, Game.tileSize, Raylib.WHITE);
+            //Raylib.DrawTextureRec()
         }
-       public void Move(int X, int Y)
+        public void Move(int X, int Y)
         {
             sijainti.X += X;
             sijainti.Y += Y;
@@ -54,6 +58,12 @@ namespace Rogue
                 sijainti.Y -= Console.WindowWidth - 1;
             }
         }
+        private void SetImageAndIndex(Texture atlasImage, int imagesPerRow, int index)
+        {
+            image = atlasImage;
+            imagePixelX= (index % imagesPerRow) * Game.tileSize;
+            imagePixelY= (int)(index / imagesPerRow) * Game.tileSize;
+        }
     }
-    
+
 }

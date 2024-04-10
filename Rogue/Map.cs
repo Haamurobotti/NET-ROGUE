@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using ZeroElectric.Vinculum;
 
 namespace Rogue
 {
@@ -24,23 +25,32 @@ namespace Rogue
         public void DrawMap()
         {
             MapLayer ground = layers[0];
-            Console.ForegroundColor = ConsoleColor.Gray;
+           
+            Console.ForegroundColor = ConsoleColor.Green;
             int mapHeight = ground.mapTiles.Length / mapWidth;
+            
             for (int y = 0; y < mapHeight; y++)
             {
                 for (int x = 0; x < mapWidth; x++)
                 {
+                    
                     int index = x + y * mapWidth;
                     int tiledId = ground.mapTiles[index];
-
+                    //int pixelX = (int)(sija)
                     Console.SetCursorPosition(x, y);
+                    int tileX = x * Game.tileSize;
+                    int tileY = y * Game.tileSize;
                     switch (tiledId)
                     {
                         case 1:
                             Console.Write(".");
+                            Raylib.DrawRectangle(tileX,tileY, Game.tileSize, Game.tileSize, Raylib.BEIGE);
                             break;
                         case 2:
                             Console.Write("#");
+                            Raylib.DrawRectangle(tileX, tileY, Game.tileSize, Game.tileSize, Raylib.GRAY);
+                            Raylib.DrawText("#", tileX, tileY, Game.tileSize, Raylib.WHITE);
+                            
                             break;
                         default:
                             Console.Write(" ");
