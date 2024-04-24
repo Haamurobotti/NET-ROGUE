@@ -32,7 +32,7 @@ namespace Rogue
                     char kirjain = nimi[i];
                     if (char.IsLetter(kirjain))
                     {
-
+                        
                     }
                     else
                     {
@@ -167,8 +167,11 @@ namespace Rogue
             Raylib.SetTextureFilter(game_screen.texture, TextureFilter.TEXTURE_FILTER_BILINEAR);
             Raylib.SetWindowMinSize(game_width, game_Height);
 
-            //Texture playerTexture = Raylib.LoadTexture("Paladin.png");
-
+            Texture playerTexture = Raylib.LoadTexture("Images/Paladin.png");
+            Texture mapWallTexture = Raylib.LoadTexture("Images/Wall.png");
+            Texture mapTileTexture = Raylib.LoadTexture("Images/Tile.png");
+            player.SetImageAndIndex(playerTexture, 4, 0);
+            //player.SetImageAndIndex(mapTileTexture, 1, 0);
             
         }
 
@@ -212,7 +215,8 @@ namespace Rogue
         {
             
             Console.Clear();
-                Raylib.ClearBackground(Raylib.BLACK);
+            Raylib.ClearBackground(Raylib.BLACK);
+            
             level101.DrawMap();
             player.Draw();
             
@@ -228,33 +232,30 @@ namespace Rogue
             int moveX = 0;
             int moveY = 0;
 
-            ConsoleKeyInfo key = Console.ReadKey();
-            if (key.Key == ConsoleKey.UpArrow)
+            //ConsoleKeyInfo key = Console.ReadKey();
+            
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_UP))
             {
                 moveY = -1;
             }
-            else if (key.Key == ConsoleKey.DownArrow)
+            else if (Raylib.IsKeyPressed(KeyboardKey.KEY_DOWN))
             {
                 moveY = 1;
             }
-            else if (key.Key == ConsoleKey.LeftArrow)
+            else if (Raylib.IsKeyPressed(KeyboardKey.KEY_LEFT))
             {
                 moveX = -1;
             }
-            else if (key.Key == ConsoleKey.RightArrow)
+            else if (Raylib.IsKeyPressed(KeyboardKey.KEY_RIGHT))
             {
                 moveX = 1;
             }
             int newX = (int)player.sijainti.X + moveX;
             int newY = (int)player.sijainti.Y + moveY;
-            int tileId = level101.getTileId(newX, newY);
+            MapTile tileId = level101.getTileId(newX, newY);
 
-            /*if (tileId == 2)
-            {
-                continue;
-            }*/
-
-            if (tileId == 1)
+            
+            if (tileId == MapTile.Floor)
             {
                 player.Move(moveX, moveY);
             }

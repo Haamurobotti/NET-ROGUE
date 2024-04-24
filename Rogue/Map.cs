@@ -8,19 +8,25 @@ using ZeroElectric.Vinculum;
 
 namespace Rogue
 {
+    public enum MapTile : int
+    {
+        Floor = 5,
+        Wall = 2
+    }
     internal class Map
     {
         public int mapWidth;
         public MapLayer[] layers;
         List<Enemy> enemies;
         List<Item> items;
-        public int getTileId(int X, int Y)
+        Texture WallImage;
+        public MapTile getTileId(int X, int Y)
         {
             MapLayer ground = layers[0];
 
             int index = X + Y * mapWidth;
             int tiledId = ground.mapTiles[index];
-            return tiledId;
+            return (MapTile)tiledId;
         }
         public void DrawMap()
         {
@@ -36,21 +42,31 @@ namespace Rogue
                     
                     int index = x + y * mapWidth;
                     int tiledId = ground.mapTiles[index];
+                    if (tiledId == 0)
+                    {
+                        continue;
+                    }
+                    int tileIndex = tiledId - 1;
                     //int pixelX = (int)(sija)
                     Console.SetCursorPosition(x, y);
                     int tileX = x * Game.tileSize;
                     int tileY = y * Game.tileSize;
-                    switch (tiledId)
+                    switch (tileIndex)
                     {
                         case 1:
                             Console.Write(".");
+                           
                             Raylib.DrawRectangle(tileX,tileY, Game.tileSize, Game.tileSize, Raylib.BEIGE);
+                            //Raylib.DrawTextureRec(WallImage, )
                             break;
                         case 2:
+                            //Rectangle WallRect = new Rectangle()
+                            float wallX = 1 % 8;
+                            float wallY = 1 / 8;
                             Console.Write("#");
                             Raylib.DrawRectangle(tileX, tileY, Game.tileSize, Game.tileSize, Raylib.GRAY);
                             Raylib.DrawText("#", tileX, tileY, Game.tileSize, Raylib.WHITE);
-                            
+                           // Raylib.DrawTextureRec(WallImage, )
                             break;
                         default:
                             Console.Write(" ");

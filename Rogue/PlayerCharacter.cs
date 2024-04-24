@@ -34,7 +34,12 @@ namespace Rogue
             int pixelY = (int)(sijainti.Y * Game.tileSize);
             //Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.RED);
             //Raylib.DrawText("@", pixelX, pixelY, Game.tileSize, Raylib.WHITE);
-            //Raylib.DrawTextureRec()
+            Rectangle imageRect = new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize);
+
+            float pixelPositionX = sijainti.X * Game.tileSize;
+            float pixelPositionY = sijainti.Y * Game.tileSize;
+            Vector2 pixelPosition = new Vector2(pixelPositionX, pixelPositionY);
+            Raylib.DrawTextureRec(image, imageRect, pixelPosition, Raylib.WHITE);
         }
         public void Move(int X, int Y)
         {
@@ -58,11 +63,14 @@ namespace Rogue
                 sijainti.Y -= Console.WindowWidth - 1;
             }
         }
-        private void SetImageAndIndex(Texture atlasImage, int imagesPerRow, int index)
+        public void SetImageAndIndex(Texture atlasImage, int imagesPerRow, int index)
         {
             image = atlasImage;
             imagePixelX= (index % imagesPerRow) * Game.tileSize;
             imagePixelY= (int)(index / imagesPerRow) * Game.tileSize;
+
+            
+
         }
     }
 
