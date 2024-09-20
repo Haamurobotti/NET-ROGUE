@@ -13,6 +13,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\RayGuiCreator\RayGuiCreator\RayGuiCreator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Images\Amulet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\Demon0.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Images\Paladin.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

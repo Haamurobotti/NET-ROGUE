@@ -28,18 +28,18 @@ namespace Rogue
         int imagePixelY;
         public void Draw()
         {
-            Console.SetCursorPosition((int)sijainti.X, (int)sijainti.Y);
-            Color color;
+            //Console.SetCursorPosition((int)sijainti.X, (int)sijainti.Y);
+            Color color = Raylib.WHITE;
             int pixelX = (int)(sijainti.X * Game.tileSize);
             int pixelY = (int)(sijainti.Y * Game.tileSize);
             //Raylib.DrawRectangle(pixelX, pixelY, Game.tileSize, Game.tileSize, Raylib.RED);
             //Raylib.DrawText("@", pixelX, pixelY, Game.tileSize, Raylib.WHITE);
-            Rectangle imageRect = new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize);
-
+            var imageRect = new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize);
+            
             float pixelPositionX = sijainti.X * Game.tileSize;
             float pixelPositionY = sijainti.Y * Game.tileSize;
             Vector2 pixelPosition = new Vector2(pixelPositionX, pixelPositionY);
-            Raylib.DrawTextureRec(image, imageRect, pixelPosition, Raylib.WHITE);
+            Raylib.DrawTextureRec(image, imageRect, pixelPosition, color);
         }
         public void Move(int X, int Y)
         {

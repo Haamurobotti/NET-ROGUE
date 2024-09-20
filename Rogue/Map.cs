@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 using ZeroElectric.Vinculum;
 
 namespace Rogue
@@ -11,7 +6,16 @@ namespace Rogue
     public enum MapTile : int
     {
         Floor = 5,
-        Wall = 2
+        Wall = 2,
+        
+    }
+    public enum EnemyTile : int
+    {
+        Demon = 1,
+    }
+    public enum ItemTile : int
+    {
+        Amulet = 2
     }
     internal class Map
     {
@@ -20,6 +24,9 @@ namespace Rogue
         List<Enemy> enemies;
         List<Item> items;
         Texture WallImage;
+        Texture TileImage;
+        Texture EnemyImage;
+        Texture ItemImage;
         public MapTile getTileId(int X, int Y)
         {
             MapLayer ground = layers[0];
@@ -28,55 +35,109 @@ namespace Rogue
             int tiledId = ground.mapTiles[index];
             return (MapTile)tiledId;
         }
+        public Enemy getEnemyTileId(int X, int Y)
+        {
+            /*
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                Enemy enemy = enemies[i];
+                enemy
+                X = X;
+            }*/
+            foreach (Enemy enemy in enemies)
+            {
+                if (enemy.position.X == X && enemy.position.Y == Y)
+                {
+                    
+                    return enemy;
+                }
+                
+                
+                
+                   
+            }
+            return null;
+        }
+        public Item getItemTileId(int X, int Y)
+        {
+            foreach (Item item in items)
+            {
+                if (item.position.X == X && item.position.Y == Y)
+                {
+
+                    return item;
+                }
+            }
+            return null;
+        }
         public void DrawMap()
         {
-            MapLayer ground = layers[0];
-           
+            MapLayer ground = GetLayer("ground");
+            int[] mapTiles = ground.mapTiles;
+
             Console.ForegroundColor = ConsoleColor.Green;
             int mapHeight = ground.mapTiles.Length / mapWidth;
-            
+
             for (int y = 0; y < mapHeight; y++)
             {
                 for (int x = 0; x < mapWidth; x++)
                 {
-                    
+
                     int index = x + y * mapWidth;
                     int tiledId = ground.mapTiles[index];
                     if (tiledId == 0)
                     {
                         continue;
                     }
-                    int tileIndex = tiledId - 1;
+                    int tileIndex = tiledId;
                     //int pixelX = (int)(sija)
                     Console.SetCursorPosition(x, y);
                     int tileX = x * Game.tileSize;
                     int tileY = y * Game.tileSize;
                     switch (tileIndex)
                     {
-                        case 1:
+                        case (int)MapTile.Floor:
                             Console.Write(".");
-                           
-                            Raylib.DrawRectangle(tileX,tileY, Game.tileSize, Game.tileSize, Raylib.BEIGE);
-                            //Raylib.DrawTextureRec(WallImage, )
+                            int tilelX = 2;
+                            int tilelY = 2;
+                            int imagePixelX1 = (tilelX) * Game.tileSize;
+                            int imagePixelY1 = (tilelY) * Game.tileSize;
+                            Rectangle imageRectangle1 = new Rectangle(imagePixelX1, imagePixelY1, Game.tileSize, Game.tileSize);
+                            Vector2 pixelPosition1 = new Vector2(tileX, tileY);
+                            // Raylib.DrawRectangle(tileX,tileY, Game.tileSize, Game.tileSize, Raylib.BEIGE);
+                            Raylib.DrawTextureRec(TileImage, imageRectangle1, pixelPosition1, Raylib.WHITE);
                             break;
-                        case 2:
+                        case (int)MapTile.Wall:
                             //Rectangle WallRect = new Rectangle()
-                            float wallX = 1 % 8;
-                            float wallY = 1 / 8;
+                            int wallX = 0;
+                            int wallY = 0;
+                            int imagePixelX = (wallX) * Game.tileSize;
+                            int imagePixelY = (wallY) * Game.tileSize;
+                            Rectangle imageRectangle = new Rectangle(imagePixelX, imagePixelY, Game.tileSize, Game.tileSize);
+                            Vector2 pixelPosition = new Vector2(tileX, tileY);
                             Console.Write("#");
                             Raylib.DrawRectangle(tileX, tileY, Game.tileSize, Game.tileSize, Raylib.GRAY);
                             Raylib.DrawText("#", tileX, tileY, Game.tileSize, Raylib.WHITE);
-                           // Raylib.DrawTextureRec(WallImage, )
+                            Raylib.DrawTextureRec(WallImage, imageRectangle, pixelPosition, Raylib.WHITE);
                             break;
                         default:
                             Console.Write(" ");
                             break;
+                           /* for (int i = 0; i < enemies.Count; i++)
+                            {
+
+                            }*/
                     }
+                   /* for (int i = 0; i < items.Count; i++)
+                    {
+                        Item currentItem = items[i];
+                        currentItem.draw
+                    }*/
 
                 }
             }
         }
-        public void LoadEnemiesAndIems()
+        public void LoadEnemiesAndIems(Texture enemyImage, Texture itemImage)
         {
             enemies = new List<Enemy>();
 
@@ -97,20 +158,24 @@ namespace Rogue
                         case 0:
                             // ei mitään tässä kohtaa
                             break;
-                        case 1:
-                            enemies.Add(new Enemy("Orc", position, 'o', ConsoleColor.Red));
+                        case (int)EnemyTile.Demon:
+                            Enemy e = new Enemy("Demon", position, EnemyImage);
+                            e.SetImageAndIndex(enemyImage, 8,2);
+                             enemies.Add(e);
+                                
                             break;
                         case 2:
                             // jne...
                             break;
                     }
                 }
+                
             }
 
-            items = new List<Item>();
+           
 
 
-            MapLayer itemLayers = layers[2];
+            MapLayer itemLayers = layers[1];
 
             // sama esineille...
             items = new List<Item>();
@@ -128,14 +193,50 @@ namespace Rogue
                         case 0:
                             // ei mitään tässä kohtaa
                             break;
-                        case 1:
-                            items.Add(new Item("Sword", position, 's', ConsoleColor.Red));
+                        case (int)ItemTile.Amulet:
+                            Item i = new Item("Amulet", position, ItemImage);
+                            i.SetImageAndIndex(itemImage, 8, 1);
+                            items.Add(i);
                             break;
-                        case 2:
+                        case 1:
                             // jne...
                             break;
                     }
                 }
+            }
+        }
+        public void SetImages(Texture Wall, Texture Tile, Texture EnemyI, Texture ItemI)
+        {
+            WallImage = Wall;
+            TileImage = Tile;
+            EnemyImage = EnemyI;
+            ItemImage = ItemI;
+        }
+        public MapLayer GetLayer(string layerName)
+        {
+            for (int i = 0; i < layers.Length; i++)
+            {
+                if (layers[i].name == layerName)
+                {
+                    return layers[i];
+                }
+
+            }
+            Console.WriteLine($"Error: No layer with name: {layerName}");
+            return null;
+        }
+        public void DrawEnemies()
+        {
+            foreach(Enemy e in enemies)
+            {
+                e.Draw();
+            }
+        }
+        public void DrawItems()
+        {
+            foreach(Item i in items)
+            {
+                i.Draw();
             }
         }
     }

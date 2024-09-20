@@ -1,8 +1,4 @@
-﻿
-
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.Xml.Linq;
+﻿using Newtonsoft.Json;
 
 namespace Rogue
 {
@@ -12,9 +8,9 @@ namespace Rogue
         {
             Map test = new Map();
             test.mapWidth = 8;
-            test.layers = new MapLayer[3]; 
-           test.layers[0].mapTiles = new int[] 
-           {
+            test.layers = new MapLayer[3];
+            test.layers[0].mapTiles = new int[]
+            {
             2, 2, 2, 2, 2, 2, 2, 2,
             2, 1, 1, 2, 1, 1, 1, 2,
             2, 1, 1, 2, 1, 1, 1, 2,
@@ -22,13 +18,13 @@ namespace Rogue
             2, 2, 2, 2, 1, 1, 1, 2,
             2, 1, 1, 1, 1, 1, 1, 2,
             2, 2, 2, 2, 2, 2, 2, 2
-            };
+             };
             return test;
         }
-        
 
-         public Map LoadFromFile(string fileName)
-         {
+
+        public Map LoadFromFile(string fileName)
+        {
             bool fileFound = File.Exists(fileName);
             if (fileFound == false)
             {
@@ -39,13 +35,14 @@ namespace Rogue
 
             using (StreamReader reader = File.OpenText(fileName))
             {
+
                 Map map = JsonConvert.DeserializeObject<Map>(reader.ReadToEnd());
-               // Map.LoadEnemiesAndIems(string fileName);
+                
                 return map;
             }
 
 
         }
     }
-    
+
 }
