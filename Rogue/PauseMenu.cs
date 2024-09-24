@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZeroElectric.Vinculum;
-
+using TurboMapReader;
 namespace Rogue
 {
     internal class PauseMenu

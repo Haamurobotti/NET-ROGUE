@@ -190,7 +190,7 @@ namespace Rogue
             
             player.sijainti = new Vector2(1, 1);
             MapLoader loader = new MapLoader();
-            level101 = loader.LoadFromFile("Maps/mapfile.json");
+            level101 = loader.LoadFromFile("TiledMap/tiledmap.tmj");
             myOptionsMenu = new OptionsMenu(this);
             myOptionsMenu.BackButtonPressedEvent += this.OnOptionsBackButtonPressed;
             myPauseMenu = new PauseMenu(this);
@@ -205,10 +205,10 @@ namespace Rogue
             Raylib.SetWindowState(ConfigFlags.FLAG_WINDOW_RESIZABLE);
             Raylib.SetTargetFPS(30);
 
-            game_width = 480;
-            game_Height = 270;
+            game_width = 480 *2;
+            game_Height = 270*2;
 
-            game_screen = Raylib.LoadRenderTexture(game_width, game_Height);
+            game_screen = Raylib.LoadRenderTexture(game_width, game_Height );
             Raylib.SetTextureFilter(game_screen.texture, TextureFilter.TEXTURE_FILTER_BILINEAR);
             Raylib.SetWindowMinSize(game_width, game_Height);
 
@@ -260,7 +260,7 @@ namespace Rogue
 
             Rectangle destination = new Rectangle(
                 (draw_width - (float)game_width * scale) * 0.5f,
-                (draw_height) - (float)game_Height * scale * 0.5f,
+               0f,
                 game_width * scale,
                 game_Height * scale);
 
@@ -271,9 +271,10 @@ namespace Rogue
 
         private void Draw()
         {
-
+            
             Console.Clear();
             Raylib.ClearBackground(Raylib.BLACK);
+            
 
             level101.DrawMap();
             level101.DrawEnemies();
@@ -333,7 +334,13 @@ namespace Rogue
             if (iTile != null)
             {
                 Raylib.BeginDrawing();
-                Raylib.DrawText($"Löysit: {iTile.name}in", 50, 330, 20, Raylib.WHITE);
+                Raylib.DrawText($"Löysit: {iTile.name}in", 50, 430, 20, Raylib.WHITE);
+                Raylib.EndDrawing();
+            }
+            if (eTile != null)
+            {
+                Raylib.BeginDrawing();
+                Raylib.DrawText($"Löysit: {eTile.name}in", 50, 430, 20, Raylib.WHITE);
                 Raylib.EndDrawing();
             }
             if (tile == MapTile.Floor && eTile == null && iTile == null)

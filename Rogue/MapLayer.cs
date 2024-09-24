@@ -10,6 +10,11 @@ namespace Rogue
     {
         public string name;
         public int[] mapTiles;
+        private int howManyTiles;
 
+        public MapLayer(int howManyTiles)
+        {
+            this.howManyTiles = howManyTiles;
+        }
     }
 }

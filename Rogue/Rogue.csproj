@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\RayGuiCreator\RayGuiCreator\RayGuiCreator.csproj" />
+    <ProjectReference Include="..\..\TurboMapReader\TurboMapReader.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +38,15 @@
     </None>
     <None Update="Maps\mapfile2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TiledMap\Tile.tsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TiledMap\tiledmap.tmj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TiledMap\tiny dungeon.tsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

@@ -5,17 +5,17 @@ namespace Rogue
 {
     public enum MapTile : int
     {
-        Floor = 5,
-        Wall = 2,
+        Floor = 19,
+        Wall = 0,
         
     }
     public enum EnemyTile : int
     {
-        Demon = 1,
+        Demon = 59,
     }
     public enum ItemTile : int
     {
-        Amulet = 2
+        Amulet = 34
     }
     internal class Map
     {
@@ -23,17 +23,42 @@ namespace Rogue
         public MapLayer[] layers;
         List<Enemy> enemies;
         List<Item> items;
+        public static List<int> WallTileNumbers = new List<int> { 1};
+        public static List<int> FloorTileNumbers = new List<int> { 20};
         Texture WallImage;
         Texture TileImage;
         Texture EnemyImage;
         Texture ItemImage;
         public MapTile getTileId(int X, int Y)
         {
-            MapLayer ground = layers[0];
+           MapLayer ground = layers[0];
 
             int index = X + Y * mapWidth;
-            int tiledId = ground.mapTiles[index];
-            return (MapTile)tiledId;
+           // int tiledId = ground.mapTiles[index];
+            //return (MapTile)tiledId;
+            // Calculate index: index = x + y * mapWidth
+            int indexInMap = X + Y * mapWidth;
+
+            // Use the index to get a map tile from map's array
+            MapLayer groundLayer = GetLayer("ground");
+            int[] mapTiles = groundLayer.mapTiles;
+            int tileId = mapTiles[indexInMap];
+
+            if (WallTileNumbers.Contains(tileId))
+            {
+                // Is a wall
+                return MapTile.Wall;
+            }
+            else if (FloorTileNumbers.Contains(tileId))
+            {
+                // One of the floortiles
+                return MapTile.Floor;
+            }
+            else
+            {
+                // Count everything else as wall for now.
+                return MapTile.Wall;
+            }
         }
         public Enemy getEnemyTileId(int X, int Y)
         {
@@ -85,11 +110,12 @@ namespace Rogue
 
                     int index = x + y * mapWidth;
                     int tiledId = ground.mapTiles[index];
+                    
                     if (tiledId == 0)
                     {
                         continue;
                     }
-                    int tileIndex = tiledId;
+                    int tileIndex = tiledId -1;
                     //int pixelX = (int)(sija)
                     Console.SetCursorPosition(x, y);
                     int tileX = x * Game.tileSize;
@@ -142,7 +168,7 @@ namespace Rogue
             enemies = new List<Enemy>();
 
 
-            MapLayer enemyLayer = layers[2];
+            MapLayer enemyLayer = layers[1];
 
             int[] enemyTiles = enemyLayer.mapTiles;
             int mapHeight = enemyTiles.Length / mapWidth;
@@ -164,7 +190,7 @@ namespace Rogue
                              enemies.Add(e);
                                 
                             break;
-                        case 2:
+                        case 1:
                             // jne...
                             break;
                     }
@@ -175,7 +201,7 @@ namespace Rogue
            
 
 
-            MapLayer itemLayers = layers[1];
+            MapLayer itemLayers = layers[2];
 
             // sama esineille...
             items = new List<Item>();
@@ -192,13 +218,16 @@ namespace Rogue
                     {
                         case 0:
                             // ei mitään tässä kohtaa
+                            
+                            
+                            
                             break;
                         case (int)ItemTile.Amulet:
                             Item i = new Item("Amulet", position, ItemImage);
                             i.SetImageAndIndex(itemImage, 8, 1);
                             items.Add(i);
                             break;
-                        case 1:
+                        case 2:
                             // jne...
                             break;
                     }
