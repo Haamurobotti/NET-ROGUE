@@ -43,6 +43,9 @@ namespace Rogue
         Texture EnemyTexture;
         Texture ItemTexture;
 
+        Sound sound;
+        Music music;
+
         GameState currentGameState;
         TextBoxEntry playerNameEntry;
         public MultipleChoiceEntry race = new MultipleChoiceEntry(new string[] { "Human", "Elf", "Orc" });
@@ -179,6 +182,9 @@ namespace Rogue
 
             Init();
             GameLoop();
+            Raylib.UnloadSound(sound);
+            Raylib.UnloadMusicStream(music);
+            Raylib.CloseAudioDevice();
             Raylib.CloseWindow();
             Raylib.UnloadRenderTexture(game_screen);
 
@@ -187,7 +193,7 @@ namespace Rogue
         {
 
             player = CreateCharacter();
-            
+            Raylib.InitAudioDevice();
             player.sijainti = new Vector2(1, 1);
             MapLoader loader = new MapLoader();
             level101 = loader.LoadFromFile("TiledMap/tiledmap.tmj");
@@ -200,6 +206,7 @@ namespace Rogue
             Raylib.InitWindow(screen_Width, screen_Height, "Rogue");
             EnemyTexture = Raylib.LoadTexture("Images/Demon0.png");
             ItemTexture = Raylib.LoadTexture("Images/Amulet.png");
+            RayGui.GuiLoadStyle("Custom/lavanda.rgs");
             level101.LoadEnemiesAndIems(EnemyTexture, ItemTexture);
             
             Raylib.SetWindowState(ConfigFlags.FLAG_WINDOW_RESIZABLE);
@@ -223,16 +230,16 @@ namespace Rogue
             currentGameState = GameState.MainMenu;
             playerNameEntry = new TextBoxEntry(12);
 
-           /* stateStack.Push(GameState.GameLoop);
-            stateStack.Push(GameState.MainMenu);
-         
-            stateStack.Push(GameState.PauseMenu);
-            stateStack.Push(GameState.OptionsMenu);*/
+            /* stateStack.Push(GameState.GameLoop);
+             stateStack.Push(GameState.MainMenu);
 
-
+             stateStack.Push(GameState.PauseMenu);
+             stateStack.Push(GameState.OptionsMenu);*/
+             sound = Raylib.LoadSound("Audio/Beep2.wav");
+             music = Raylib.LoadMusicStream("Audio/BeepSong.wav");
+             Raylib.PlayMusicStream(music);
         }
-
-
+        
 
         private void DrawGameToTexture()
         {
@@ -249,7 +256,7 @@ namespace Rogue
         {
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Raylib.DARKGRAY);
-
+            
             int draw_width = Raylib.GetScreenWidth();
             int draw_height = Raylib.GetScreenHeight();
             float scale = Math.Min((float)draw_width / game_width, (float)draw_height / game_Height);
@@ -335,30 +342,34 @@ namespace Rogue
             {
                 Raylib.BeginDrawing();
                 Raylib.DrawText($"Löysit: {iTile.name}in", 50, 430, 20, Raylib.WHITE);
+                Raylib.PlaySound(sound);
                 Raylib.EndDrawing();
             }
             if (eTile != null)
             {
                 Raylib.BeginDrawing();
                 Raylib.DrawText($"Löysit: {eTile.name}in", 50, 430, 20, Raylib.WHITE);
+                Raylib.PlaySound(sound);
                 Raylib.EndDrawing();
             }
             if (tile == MapTile.Floor && eTile == null && iTile == null)
             {
+                
                 player.Move(moveX, moveY);
             }
 
 
             if (Raylib.IsKeyPressed(KeyboardKey.KEY_F))
             {
+                
                 stateStack.Push(GameState.PauseMenu);
             }
-            
 
 
 
 
 
+            Raylib.UpdateMusicStream(music);
 
         }
 
@@ -552,7 +563,7 @@ namespace Rogue
                         DrawMainMenu(x + Raylib.GetScreenWidth() / 2 - width / 2, y, width);
                         break;
                     case GameState.GameLoop:
-                        stateStack.Push(GameState.GameLoop);
+                        //stateStack.Push(GameState.GameLoop);
                         UpdateGame();
                         DrawGameToTexture();
                         break;
